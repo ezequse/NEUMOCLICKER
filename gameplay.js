@@ -63,7 +63,7 @@ class gameplay extends Phaser.Scene {
         var ey = 300;
         
         //stast player
-        var atk = 1000;
+        var atk = 1;
         var puntos = 0;
         var tiempo;
         var vidaP = 20;
@@ -84,15 +84,19 @@ class gameplay extends Phaser.Scene {
         //##### Funciones ###
         function inter(){
             if(cont_en == 7 || cont_en == 14){
-                mari.destroy();
-                mari1.destroy();
+                mari.setVisible(false);
+                mari1.setVisible(false);
                 cat.destroy();
                 lol.pause = true;
                 cont_en +=1;
                 this.scene.pause();
                 this.scene.launch('inter');
                 
-            } 
+                
+            } else if(cont_en > 14){
+                mari1.setVisible(true);
+                mari.setVisible(true);
+            }
             if(cont_en == 6 && cont_ad == 6){
             this.cameras.main.shake(1000, 0.05);
             cont_ad += 1;
@@ -120,11 +124,11 @@ class gameplay extends Phaser.Scene {
             //localStorage.setItem("minutos", min);
             
             if(cont_en == 23 && gender == 2){
-                if(min <= 0 && seg <= 50){
+                if(min == 2 && seg <= 1 || min <= 1 && seg <= 59){
                     puntos+=45;
-                } else if (min == 1 && seg<= 20 || min == 0 && seg >= 51) {
+                } else if (min == 2 && seg <= 45 ) {
                     puntos+=30;
-                } else if(min < 2){
+                } else if(min < 3){
                     puntos+=15;
                 }
                 localStorage.setItem("segundos", seg);
@@ -142,11 +146,27 @@ class gameplay extends Phaser.Scene {
             casaM.stop();
             cityM.stop();
             
-            } else if(cont_en == 22 && gender != 2) {
-
+            } else if(cont_en == 23 && gender != 2) {
+                if(min == 2 && seg <= 1 || min <= 1 && seg <= 59){
+                    puntos+=45;
+                } else if (min == 2 && seg <= 45 ) {
+                    puntos+=30;
+                } else if(min < 3){
+                    puntos+=15;
+                }
+                localStorage.setItem("segundos", seg);
+                localStorage.setItem("minutos", min);
+                localStorage.setItem("Pgastados", gastados);
+                if(puntos > localStorage.getItem("puntosm")){
+                    localStorage.setItem("puntosm", puntos);
+                    localStorage.setItem("segundos", seg);
+                    localStorage.setItem("minutos", min);
+                    localStorage.setItem("Pgastados", gastados);
+                }
                 this.scene.start('ganarw1', puntos);
                 casaM.stop();
                 cityM.stop();
+
             }
 
         }
@@ -157,7 +177,7 @@ class gameplay extends Phaser.Scene {
                 if(vida >= 1 && vida > 0){
                     vida = vida - autoAtk;
                     barraVida.setScale(vida/maxVida*1,0.5);
-                    if(cont_en == 6 || cont_en == 13 || cont_en == 21){
+                    if(cont_en == 6 || cont_en == 13 || cont_en == 22){
                         barraVida.setScale(vida/maxVida*3,0.5);
                     }
                 } 
@@ -165,7 +185,7 @@ class gameplay extends Phaser.Scene {
         }
 
         function avioneta(){
-            if(cont_en >= 7){
+            if(cont_en >= 7 && cont_en <= 13){
                 var avion = this.add.image(250, Phaser.Math.Between(10,100), 'avion').setFlipX(true).setScale(0.5);
                 this.physics.world.enable(avion);
                 avion.body.setVelocity(100, 0);

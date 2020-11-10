@@ -6,6 +6,7 @@ class resumir extends Phaser.Scene {
   preload ()
   {   
     this.load.image('resume', 'assets/resume.png');
+    this.load.image('resume_en', 'assets/resume_en.png');
     this.load.image('backboton', 'assets/back_button.png');
     this.load.image('home', 'assets/home.png');
     this.load.image('bg_pausa', 'assets/bg_pausa.png');
@@ -14,7 +15,15 @@ class resumir extends Phaser.Scene {
 
   create() {
     var bg_pausa = this.add.image(400,300, 'bg_pausa').setVisible(true);
-    var resume = this.add.image( 500, 300, 'resume').setDisplaySize(651, 250);
+
+    if (idioma == "por"){
+      var resume = this.add.image( 500, 300, 'resume').setDisplaySize(651, 250);
+    } else if ( idioma == "en"){
+      var resume = this.add.image( 500, 300, 'resume_en').setDisplaySize(651, 250);
+    } else {
+      var resume = this.add.image( 500, 300, 'resume').setDisplaySize(651, 250);
+    }
+    
     
     var jugar = this.add.image(400, 400, 'backboton').setScale(1.5).setInteractive();
     var menu = this.add.image(600, 400, 'home').setScale(3).setInteractive();
