@@ -88,7 +88,7 @@ class Personaje extends Phaser.Scene {
 
       player_woman.on("pointerdown", () => {
         music.play();
-        this.sound.stopAll();
+        
         gender = 1;
         jugar.setVisible(true);
         //this.scene.start('gameplay');
@@ -102,13 +102,12 @@ class Personaje extends Phaser.Scene {
       player_men.on("pointerdown", () => {
         gender = 2;
         menu.stop();
-        this.sound.stopAll();
-        //this.scene.start('gameplay', gender);
         jugar.setVisible(true);
         ani = 2;
       });
       
       jugar.on("pointerdown", () =>{
+        this.sound.stopAll();
         this.scene.start('gameplay', gender);
       });
       

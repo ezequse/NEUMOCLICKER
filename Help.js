@@ -21,6 +21,9 @@ class Help extends Phaser.Scene {
       this.load.image('ayuda_qte', 'assets/ayuda_qte.png');
       this.load.image('ayuda_qte_en', 'assets/help_qte.png');
       this.load.image('ayuda_qte_br', 'assets/ayuda_qte_br.png');
+      this.load.image('mejora_es', 'assets/ayuda_mejoras.png');
+      this.load.image('mejora_en', 'assets/ayuda_mejoras_en.png');
+      this.load.image('mejora_por', 'assets/ayuda_mejoras_br.png');
 
     }
 
@@ -30,22 +33,27 @@ class Help extends Phaser.Scene {
       var manito_click = this.add.sprite(400,420, 'manito_click').setScale(1.8); 
       var next = this.add.image(700, 520, 'siguiente').setInteractive().setScale(1.3);
       var music = this.sound.add("click", {loop: false});  
+      
 
       if (idioma == "por"){
         var txt_help = this.add.image( 400, 100, 'txt_help_br').setScale(1.9);
         var ayuda_puntos = this.add.image(400,300, 'ayuda_puntos_br').setDisplaySize(800, 600);
         var ayuda_qte = this.add.image(400,300, 'ayuda_qte_br').setDisplaySize(800, 600);
+        var mejoras = this.add.image(400,300, 'mejora_por').setDisplaySize(800, 600);
       } else if ( idioma == "en"){
         var txt_help = this.add.image( 400, 100, 'txt_help_en').setScale(1.9);
         var ayuda_puntos = this.add.image(400,300, 'ayuda_puntos_en').setDisplaySize(800, 600);
         var ayuda_qte = this.add.image(400,300, 'ayuda_qte_en').setDisplaySize(800, 600);
+        var mejoras = this.add.image(400,300, 'mejora_en').setDisplaySize(800, 600);
       } else {
         var txt_help = this.add.image( 400, 100, 'txt_help').setScale(1.9);
         var ayuda_puntos = this.add.image(400,300, 'ayuda_puntos').setDisplaySize(800, 600);
         var ayuda_qte = this.add.image(400,300, 'ayuda_qte').setDisplaySize(800, 600);
+        var mejoras = this.add.image(400,300, 'mejora_es').setDisplaySize(800, 600);
       }
 
       ayuda_puntos.setVisible(false);
+      mejoras.setVisible(false);
       ayuda_qte.setVisible(false)
       var nxt = 1;
       next.on("pointerdown", () => {
@@ -56,6 +64,7 @@ class Help extends Phaser.Scene {
           txt_help.setVisible(true);
           enemy.setVisible(true);
           ayuda_qte.setVisible(false);
+          mejoras.setVisible(false);
           nxt = 1;
         } else if(nxt == 1){
           nxt = 3;
@@ -64,6 +73,15 @@ class Help extends Phaser.Scene {
           txt_help.setVisible(false);
           enemy.setVisible(false);
           ayuda_qte.setVisible(false);
+          mejoras.setVisible(false);
+        } else if(nxt == 3){
+          ayuda_puntos.setVisible(false);
+          manito_click.setVisible(false);
+          txt_help.setVisible(false);
+          enemy.setVisible(false);
+          ayuda_qte.setVisible(false);
+          mejoras.setVisible(true);
+          nxt = 4;
         } else {
           nxt = 2;
           ayuda_puntos.setVisible(false);
@@ -71,6 +89,7 @@ class Help extends Phaser.Scene {
           txt_help.setVisible(false);
           enemy.setVisible(false);
           ayuda_qte.setVisible(true); 
+          mejoras.setVisible(false);
         }
       });
 

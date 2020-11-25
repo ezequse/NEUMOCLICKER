@@ -35,9 +35,16 @@ class Score extends Phaser.Scene {
         this.scene.start('Menuprincipal');
       });
       
-      this.add.text(570, 375, value,{fill: '#ff417d',  fontSize: '48px', stroke: '#000', strokeThickness: 2});
-      this.add.text(120, 375, '0' + minutos + ':' + segundos, {fill: '#ff417d',  fontSize: '48px', stroke: '#000', strokeThickness: 2});
-      this.add.text(390, 375, gastados, {fill: '#ff417d',  fontSize: '48px', stroke: '#000', strokeThickness: 2});
+      if(value != null){
+        this.add.text(570, 375, value,{fill: '#ff417d',  fontSize: '48px', stroke: '#000', strokeThickness: 2});
+        this.add.text(120, 375, '0' + minutos + ':' + segundos, {fill: '#ff417d',  fontSize: '48px', stroke: '#000', strokeThickness: 2});
+        this.add.text(390, 375, gastados, {fill: '#ff417d',  fontSize: '48px', stroke: '#000', strokeThickness: 2});
+      } else {
+        this.add.text(570, 375, '0',{fill: '#ff417d',  fontSize: '48px', stroke: '#000', strokeThickness: 2});
+        this.add.text(120, 375, '0' + '0' + ':' + '00', {fill: '#ff417d',  fontSize: '48px', stroke: '#000', strokeThickness: 2});
+        this.add.text(390, 375, '0', {fill: '#ff417d',  fontSize: '48px', stroke: '#000', strokeThickness: 2});
+      }
+      
 
   }
 

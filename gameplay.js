@@ -35,11 +35,6 @@ class gameplay extends Phaser.Scene {
         this.load.image('pasti', 'assets/pasti.png');
         this.load.image('qte_bad1', 'assets/qte_bad1.png');
         this.load.image('mancha', 'assets/mancha.png');
-        this.load.audio('musica_casa', 'assets/audio/hogar.mp3');
-        this.load.audio('musica_city', 'assets/audio/ciudad.mp3');
-        this.load.audio('desventaja', 'assets/audio/Personaje_danado.mp3');
-        this.load.audio('coin1', 'assets/audio/coin.mp3');
-        this.load.audio('sick', 'assets/audio/Personaje_daniado.mp3');
         this.load.image('pause', 'assets/pause.png');
         this.load.image('mute', 'assets/mute.png');
         this.load.image('coin', 'assets/coin.png');
@@ -48,6 +43,13 @@ class gameplay extends Phaser.Scene {
         this.load.spritesheet('mariposa', 'assets/mariposa.png', {frameWidth: 32, frameHeight: 32});
         this.load.spritesheet('cat', 'assets/cat.png', {frameWidth: 32, frameHeight: 32});
         this.load.image('avion', 'assets/avion.png');
+        this.load.image('sound', 'assets/sound.png');
+        this.load.audio('musica_casa', 'assets/audio/hogar.mp3');
+        this.load.audio('musica_city', 'assets/audio/ciudad.mp3');
+        this.load.audio('musica_escuela', 'assets/audio/escuela.mp3');
+        this.load.audio('desventaja', 'assets/audio/Personaje_danado.mp3');
+        this.load.audio('coin1', 'assets/audio/coin.mp3');
+        this.load.audio('sick', 'assets/audio/Personaje_daniado.mp3');
         
     }
     
@@ -63,7 +65,7 @@ class gameplay extends Phaser.Scene {
         var ey = 300;
         
         //stast player
-        var atk = 1;
+        var atk = 30;
         var puntos = 0;
         var tiempo;
         var vidaP = 20;
@@ -145,6 +147,7 @@ class gameplay extends Phaser.Scene {
             this.scene.start('ganarm1', puntos); // Se envian los datos a otra escena
             casaM.stop();
             cityM.stop();
+            escuelaM.stop();
             
             } else if(cont_en == 23 && gender != 2) {
                 if(min == 2 && seg <= 1 || min <= 1 && seg <= 59){
@@ -166,7 +169,7 @@ class gameplay extends Phaser.Scene {
                 this.scene.start('ganarw1', puntos);
                 casaM.stop();
                 cityM.stop();
-
+                escuelaM.stop();
             }
 
         }
@@ -201,22 +204,30 @@ class gameplay extends Phaser.Scene {
                 barraVidaPlayer.setScale(vidaP/maxVidaP*1, 0.5);
                 if(vidaP <= 10 && gender == 2){
                     var lowhp = this.sound.add('sick', {loop: false});
-                    lowhp.play();
+                    if(test == 1){
+                        lowhp.play();
+                    }
                     player.setTexture('playerenfermo');
                     
                 } else if(vidaP <= 10 && gender != 2){
                     var lowhp = this.sound.add('sick', {loop: false});
-                    lowhp.play();
+                    if(test == 1){
+                        lowhp.play();
+                    }
                     playerm.setTexture('playerwenferma');
                 }
                 if (vidaP <=0 && gender == 2){
                     this.scene.start('perderm');
                     casaM.stop();
                     cityM.stop();
+                    escuelaM.stop();
+                    test = 3;
                 } else if(vidaP <=0 && gender != 2){
                     this.scene.start('perderw');
                     casaM.stop();
                     cityM.stop();
+                    escuelaM.stop();
+                    test = 3;
                 }
                 
             }  
@@ -238,10 +249,10 @@ class gameplay extends Phaser.Scene {
             var clickQTE = qte.on('pointerup', function(pointer){
                 if(pastisR == 1){
                     puntos +=5;
-                    puntosTxt.setText('Puntos: ' + puntos);
+                    puntosTxt.setText('Puntos: ' + puntos+'$');
                 } else {
                     puntos -=5;
-                    puntosTxt.setText('Puntos: ' + puntos);
+                    puntosTxt.setText('Puntos: ' + puntos+'$');
                 }
                 clickQTE.destroy();
             });
@@ -253,7 +264,10 @@ class gameplay extends Phaser.Scene {
         function aparece_mancha(){
             mancha = this.add.image(210, 11, 'mancha').setOrigin(0).setDisplaySize(580 , 580).setAlpha(0.8);
             var desv = this.sound.add('desventaja', {loop: false});
-            desv.play();
+            if(test == 1){
+                desv.play();
+            }
+            
         }
         var time_mancha = this.time.addEvent({ delay: 9000, callback: aparece_mancha, callbackScope: this, loop: true });
 
@@ -264,10 +278,11 @@ class gameplay extends Phaser.Scene {
         
         var casaM = this.sound.add("musica_casa", {loop: true});
         var cityM = this.sound.add("musica_city", {loop: true});
+        var escuelaM = this.sound.add("musica_escuela", {loop: true});
         casaM.play();
         var bk_Gp = this.add.image(0, 0, 'background').setOrigin(0).setScale(1.92 , 2.5);
         var cielo = this.add.sprite(500, 111, 'cielo').setDisplaySize(579 , 200);
-        var mute = this.add.image(64 ,64, 'mute').setScale(1.7);
+        var mute = this.add.image(64 ,64, 'sound').setScale(1.7);
         var pause = this.add.image(146, 64, 'pause').setScale(1.7);
 
         
@@ -279,25 +294,34 @@ class gameplay extends Phaser.Scene {
                 this.scene.launch('resumir');                
         });
         //boton mute
+        mute.setInteractive();
         if(test == 2){
             casaM.pause();
             cityM.pause();
+            escuelaM.pause();
+            mute.setTexture('mute');
         }
-        mute.setInteractive();
         mute.on("pointerdown", () => {
             if (test !=2) {
             casaM.pause();
             cityM.pause();
-            
+            escuelaM.pause();
+            mute.setTexture('mute');
             test = 2;
             } else {
                 casaM.resume();
-                cityM.resume();
-                
+                if(cont_en >= 7){
+                    cityM.play();
+                } 
+                if(cont_en >= 12){
+                    cityM.stop()
+                    escuelaM.play();
+                }
+                mute.setTexture('sound');
                 test = 1;
-            }
+            } 
         });
-    
+        
         //####Creacion y pos de sprites####
         this.anims.create({
             key: 'cielo',
@@ -352,9 +376,9 @@ class gameplay extends Phaser.Scene {
             var txt2 = this.add.text(40, 276, 'AutoAtaque:$10', {fill: '#000'});
             var txt3 = this.add.text(60, 346, 'Cura: $10', {fill: '#000'});
         } else {
-            var txt1 = this.add.text(55, 206, 'Atáque: $10', {fill: '#000'});
+            var txt1 = this.add.text(55, 206, 'Ataque: $10', {fill: '#000'});
             var txt2 = this.add.text(40, 276, 'AutoAtaque:$10', {fill: '#000'});
-            var txt3 = this.add.text(44, 346, 'Curacion: $10', {fill: '#000'});
+            var txt3 = this.add.text(44, 346, 'Curación: $10', {fill: '#000'});
         }
         var bacteria = this.add.image(ex, ey, 'bacteria').setInteractive().setScale(1.5);
         
@@ -499,8 +523,11 @@ class gameplay extends Phaser.Scene {
             barraVida.y= bacteria.y+71;
 
             if(vida <= 0){
-                coin1.play();
-                console.log(vida + ' COIN')
+                if(test == 1){
+                    coin1.play();
+                }
+                
+                //console.log(vida + ' COIN')
                 vida = 0;
                 
                 //sistema de conteo de enemigos derrotados
@@ -610,21 +637,32 @@ class gameplay extends Phaser.Scene {
                 cont_en += 1;
                 puntos += 10; 
                 barraVida.setScale(vida/maxVida*1,0.5);
-                console.log(cont_en);
+                //console.log(cont_en);
                 
                if(cont_en == 7){
                     casaM.stop();
-                    cityM.play();
+                    if(test == 1){
+                        console.log('test = ' + test)
+                        cityM.play();
+                    }
+                    
+                }
+                if(cont_en == 14){
+                    cityM.stop();
+                    if(test == 1){
+                        console.log('test = ' + test)
+                        escuelaM.play();
+                    }
                 }               
                 
             }
 
             if (idioma == "por"){
-                puntosTxt.setText('Pontos: ' + puntos);
+                puntosTxt.setText('Pontos: ' + puntos+'$');
             } else if ( idioma == "en"){
-                puntosTxt.setText('Points: ' + puntos);
+                puntosTxt.setText('Points: ' + puntos+'$');
             } else {
-                puntosTxt.setText('Puntos: ' + puntos);
+                puntosTxt.setText('Puntos: ' + puntos+'$');
             }
 
             winTxt.x = bacteria.x-centrar;
@@ -677,11 +715,11 @@ class gameplay extends Phaser.Scene {
                 puntos -= 10;
                 gastados += 10;
                 if (idioma == "por"){
-                    puntosTxt.setText('Pontos: ' + puntos);
+                    puntosTxt.setText('Pontos: ' + puntos+'$');
                 } else if ( idioma == "en"){
-                    puntosTxt.setText('Points: ' + puntos);
+                    puntosTxt.setText('Points: ' + puntos+'$');
                 } else {
-                    puntosTxt.setText('Puntos: ' + puntos);
+                    puntosTxt.setText('Puntos: ' + puntos+'$');
                 }
             }
         });
@@ -695,13 +733,13 @@ class gameplay extends Phaser.Scene {
                 puntos -= 10;   
                 gastados += 10;
                 if (idioma == "por"){
-                    puntosTxt.setText('Pontos: ' + puntos);
+                    puntosTxt.setText('Pontos: ' + puntos+'$');
                     aaText.setText('AutoAtaque: ' + autoAtk); 
                 } else if ( idioma == "en"){
-                    puntosTxt.setText('Points: ' + puntos);
+                    puntosTxt.setText('Points: ' + puntos+'$');
                     aaText.setText('AutoAttack: ' + autoAtk); 
                 } else {
-                    puntosTxt.setText('Puntos: ' + puntos);
+                    puntosTxt.setText('Puntos: ' + puntos+'$');
                     aaText.setText('AutoAtaque: ' + autoAtk); 
                 } 
                           
@@ -716,15 +754,17 @@ class gameplay extends Phaser.Scene {
                 gastados += 10;
                 barraVidaPlayer.setScale(vidaP/maxVidaP, 0.5);
                 if (idioma == "por"){
-                    puntosTxt.setText('Pontos: ' + puntos);
+                    puntosTxt.setText('Pontos: ' + puntos+'$');
                 } else if ( idioma == "en"){
-                    puntosTxt.setText('Points: ' + puntos);
+                    puntosTxt.setText('Points: ' + puntos+'$');
                 } else {
-                    puntosTxt.setText('Puntos: ' + puntos);
+                    puntosTxt.setText('Puntos: ' + puntos+'$');
                 }
             }
         });               
         var marco = this.add.image(0, 0, 'marco').setOrigin(0).setScale(1.92 , 2.5);
+
+        
     }
     
     
